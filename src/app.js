@@ -22,7 +22,7 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
-    message: 'Task Manager Backend is running',
+    message: 'Task Manager Backend is running - Updated',
     timestamp: new Date().toISOString()
   });
 });
