@@ -4,11 +4,9 @@ import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
-// CORS configuration
+// CORS configuration - Allow all origins for testing
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://taskmanager-frontend-one.vercel.app', 'https://*.vercel.app', 'https://taskmanager-backend-production-049a.up.railway.app']
-    : ['http://localhost:3001'],
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
