@@ -7,7 +7,7 @@ const app = express();
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com', 'https://taskmanager-frontend-*.vercel.app']
+    ? ['https://taskmanager-frontend-*.vercel.app', 'https://taskmanager-backend-production-049a.up.railway.app']
     : ['http://localhost:3001'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
