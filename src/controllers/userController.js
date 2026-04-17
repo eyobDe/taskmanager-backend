@@ -1,5 +1,7 @@
 import User from '../models/User.js';
 import Task from '../models/Task.js';
+import Subtask from '../models/Subtask.js';
+import Project from '../models/Project.js';
 
 export const getDashboard = async (req, res, next) => {
   try {
