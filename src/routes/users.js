@@ -1,6 +1,9 @@
 import express from 'express';
+import { getDashboard } from '../controllers/userController.js';
+
 const router = express.Router();
 
-// Routes will be added in Phase 3
+// GET /api/users/:id/dashboard
+router.get('/:id/dashboard', getDashboard);
 
 export default router;

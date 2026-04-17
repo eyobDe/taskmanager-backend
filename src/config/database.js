@@ -1,36 +1,24 @@
 import mongoose from 'mongoose';
 
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
-    // Prioritize MongoDB Atlas for production, fallback to local for development
-    const mongoURI = process.env.NODE_ENV === 'production' 
-      ? process.env.MONGODB_ATLAS_URL 
-      : process.env.MONGODB_ATLAS_URL || process.env.DATABASE_URL;
+    const mongoURI = process.env.DATABASE_URL || process.env.MONGODB_ATLAS_URL;
     
     if (!mongoURI) {
       throw new Error('MongoDB connection string not found in environment variables');
     }
-
-    // For development with localhost, skip if MongoDB isn't running
-    if (process.env.NODE_ENV === 'development' && mongoURI.includes('localhost')) {
-      console.log('Development mode: Skipping MongoDB connection (localhost not running)');
-      return null;
-    }
-
-    const conn = await mongoose.connect(mongoURI, {
+    
+    await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-    return conn;
+    
+    console.log('MongoDB connected successfully');
+    return mongoose.connection;
   } catch (error) {
-    console.error('Database connection error:', error.message);
-    // Don't exit in development, just warn
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Development mode: Continuing without database connection');
-      return null;
-    }
-    process.exit(1);
+    console.error('MongoDB connection failed:', error.message);
+    process.exit(1); // Exit if can't connect
   }
 };
+
+export default connectDB;

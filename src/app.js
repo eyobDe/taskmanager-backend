@@ -2,6 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import { errorHandler } from './middleware/errorHandler.js';
 
+// Import routes
+import userRoutes from './routes/users.js';
+import taskRoutes from './routes/tasks.js';
+import projectRoutes from './routes/projects.js';
+
 const app = express();
 
 // CORS configuration - Allow all origins for testing
@@ -25,7 +30,10 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Routes will be mounted here in Phase 2
+// Mount routes
+app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/projects', projectRoutes);
 
 app.use(errorHandler);
 
