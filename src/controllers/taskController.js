@@ -113,6 +113,14 @@ export const completeTask = async (req, res, next) => {
       return res.status(400).json({ error: 'Task is already completed' });
     }
 
+    // Check if task has incomplete dependencies
+    if (task.dependsOn && task.dependsOn.length > 0) {
+      const isStillBlocked = task.dependsOn.some(dep => !dep.is_completed);
+      if (isStillBlocked) {
+        return res.status(400).json({ error: 'Cannot complete task: dependencies are not met.' });
+      }
+    }
+
     // Mark task as completed
     task.is_completed = true;
     task.updated_at = new Date();

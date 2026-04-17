@@ -1,11 +1,13 @@
 import Project from '../models/Project.js';
 import User from '../models/User.js';
+import mongoose from 'mongoose';
 
 export const createProject = async (req, res, next) => {
   try {
     const { name, user_id } = req.body; // In real app, user_id comes from auth token
     
     const project = await Project.create({ 
+      _id: new mongoose.Types.ObjectId(), 
       name, 
       created_by: user_id 
     });
