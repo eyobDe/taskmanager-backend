@@ -1,5 +1,6 @@
 import Task from '../models/Task.js';
 import Project from '../models/Project.js';
+import Subtask from '../models/Subtask.js';
 import mongoose from 'mongoose';
 
 // Helper function for circular dependency detection using DFS
@@ -153,6 +154,66 @@ export const completeTask = async (req, res, next) => {
     };
 
     res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Create a subtask for an existing task
+export const createSubtask = async (req, res, next) => {
+  try {
+    const { taskId } = req.params;
+    const { title } = req.body;
+
+    // Validate required fields
+    if (!title || !title.trim()) {
+      return res.status(400).json({ 
+        error: 'Missing required field',
+        details: 'title is required'
+      });
+    }
+
+    // Validate task exists
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    // Create the subtask
+    const subtask = await Subtask.create({ 
+      _id: new mongoose.Types.ObjectId(),
+      title: title.trim(), 
+      task_id: taskId 
+    });
+    
+    // Link it to the parent task
+    await Task.findByIdAndUpdate(taskId, {
+      $push: { subtasks: subtask._id }
+    });
+    
+    res.status(201).json(subtask);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Mark a subtask as complete
+export const completeSubtask = async (req, res, next) => {
+  try {
+    const { subtaskId } = req.params;
+
+    // Find and update the subtask
+    const subtask = await Subtask.findByIdAndUpdate(
+      subtaskId,
+      { is_completed: true },
+      { new: true }
+    );
+
+    if (!subtask) {
+      return res.status(404).json({ error: 'Subtask not found' });
+    }
+
+    res.json(subtask);
   } catch (error) {
     next(error);
   }
